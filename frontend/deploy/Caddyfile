@@ -1,0 +1,34 @@
+{$MLH_SITE_ADDRESS:https://localhost} {
+	encode zstd gzip
+	root * /srv
+
+	basic_auth {
+		{$MLH_BASIC_AUTH_USERNAME:movie-helper} {$MLH_BASIC_AUTH_HASH}
+	}
+
+	request_body {
+		max_size 11MB
+	}
+
+	@backend path /api/* /health/* /metrics /docs* /openapi.json
+	handle @backend {
+		reverse_proxy backend:8000 {
+			header_up Authorization "Bearer {$MLH_PRIVATE_ACCESS_TOKEN}"
+		}
+	}
+
+	handle {
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		-Server
+		Strict-Transport-Security "max-age=31536000; includeSubDomains"
+		X-Content-Type-Options "nosniff"
+		X-Frame-Options "DENY"
+		Referrer-Policy "no-referrer"
+		Permissions-Policy "camera=(), microphone=(), geolocation=()"
+		Content-Security-Policy "default-src 'self'; connect-src 'self'; img-src 'self' data:; style-src 'self'; script-src 'self'; base-uri 'none'; frame-ancestors 'none'; form-action 'self'"
+	}
+}

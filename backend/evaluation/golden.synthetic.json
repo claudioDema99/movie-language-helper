@@ -1,0 +1,12 @@
+{
+  "schema_version": "golden-v1",
+  "provenance": "project-authored synthetic dialogue; see LICENSE.md",
+  "cases": [
+    {"id":"a1-word","learner_cefr":"A1","cues":[{"id":"cue-1","text":"Please close the blue gate.","context_only":false}],"expected":[{"expression":"gate","type":"word"}],"distractors":["blue"]},
+    {"id":"a2-phrasal","learner_cefr":"A2","cues":[{"id":"cue-1","text":"Please turn down the music before we talk.","context_only":false}],"expected":[{"expression":"turn down","type":"phrasal_verb"}],"distractors":["music"]},
+    {"id":"b1-idiom","learner_cefr":"B1","cues":[{"id":"cue-1","text":"The practice task was a piece of cake.","context_only":false}],"expected":[{"expression":"a piece of cake","type":"idiom"}],"distractors":["practice"]},
+    {"id":"b2-slang","learner_cefr":"B2","cues":[{"id":"cue-1","text":"That handmade radio is pretty cool.","context_only":false}],"expected":[{"expression":"cool","type":"slang"}],"distractors":["radio"]},
+    {"id":"c1-expression","learner_cefr":"C1","cues":[{"id":"cue-1","text":"Her explanation leaves much to be desired.","context_only":false}],"expected":[{"expression":"leaves much to be desired","type":"other_expression"}],"distractors":["explanation"]},
+    {"id":"c2-context","learner_cefr":"C2","cues":[{"id":"context-1","text":"The committee met on Tuesday.","context_only":true},{"id":"cue-1","text":"Their compromise merely kicked the can down the road.","context_only":false}],"expected":[{"expression":"kicked the can down the road","type":"idiom"}],"distractors":["committee"]}
+  ]
+}

@@ -1,0 +1,33 @@
+# Local environment and secrets
+.env
+.env.*
+!.env.example
+deploy/secrets/*
+!deploy/secrets/.gitkeep
+!deploy/secrets/README.md
+
+# Python
+__pycache__/
+*.py[cod]
+.coverage
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.venv/
+backend/.venv/
+
+# Node and frontend builds
+node_modules/
+frontend/node_modules/
+frontend/coverage/
+frontend/dist/
+frontend/playwright-report/
+frontend/test-results/
+
+# Dependency review output
+.artifacts/
+
+# Editors and operating systems
+.DS_Store
+.idea/
+.vscode/

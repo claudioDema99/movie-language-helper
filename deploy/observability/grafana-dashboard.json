@@ -1,0 +1,66 @@
+{
+  "annotations": {"list": []},
+  "editable": true,
+  "panels": [
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {"unit": "percentunit"}},
+      "gridPos": {"h": 8, "w": 8, "x": 0, "y": 0},
+      "id": 1,
+      "targets": [{"expr": "avg(up{job=\"movie-language-helper-backend\"})", "refId": "A"}],
+      "title": "Backend availability",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {"h": 8, "w": 8, "x": 8, "y": 0},
+      "id": 2,
+      "targets": [{"expr": "sum(rate(mlh_http_requests_total[5m]))", "refId": "A"}],
+      "title": "Requests per second",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {"unit": "ms"}},
+      "gridPos": {"h": 8, "w": 8, "x": 16, "y": 0},
+      "id": 3,
+      "targets": [{"expr": "rate(mlh_http_duration_milliseconds_sum[5m]) / clamp_min(rate(mlh_http_duration_milliseconds_count[5m]), 0.001)", "refId": "A"}],
+      "title": "Average HTTP latency",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 12, "x": 0, "y": 8},
+      "id": 4,
+      "targets": [{"expr": "sum by (code) (increase(mlh_errors_total[15m]))", "legendFormat": "{{code}}", "refId": "A"}],
+      "title": "Application errors (15 minute increase)",
+      "type": "timeseries"
+    },
+    {
+      "datasource": "Prometheus",
+      "fieldConfig": {"defaults": {"unit": "ms"}},
+      "gridPos": {"h": 9, "w": 6, "x": 12, "y": 8},
+      "id": 5,
+      "targets": [{"expr": "rate(mlh_analysis_latency_milliseconds_sum[15m]) / clamp_min(rate(mlh_analysis_requests_total[15m]), 0.001)", "refId": "A"}],
+      "title": "Average analyzer latency",
+      "type": "stat"
+    },
+    {
+      "datasource": "Prometheus",
+      "gridPos": {"h": 9, "w": 6, "x": 18, "y": 8},
+      "id": 6,
+      "targets": [
+        {"expr": "increase(mlh_analyzer_input_tokens_total[1h])", "legendFormat": "input", "refId": "A"},
+        {"expr": "increase(mlh_analyzer_output_tokens_total[1h])", "legendFormat": "output", "refId": "B"}
+      ],
+      "title": "Analyzer tokens per hour",
+      "type": "stat"
+    }
+  ],
+  "schemaVersion": 39,
+  "tags": ["movie-language-helper"],
+  "templating": {"list": []},
+  "time": {"from": "now-6h", "to": "now"},
+  "title": "Movie Language Helper",
+  "uid": "movie-language-helper"
+}

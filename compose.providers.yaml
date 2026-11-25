@@ -1,0 +1,19 @@
+services:
+  backend:
+    environment:
+      MLH_OPENAI_ENABLED: "${MLH_OPENAI_ENABLED:-false}"
+      MLH_OPENAI_RISK_ACKNOWLEDGED: "${MLH_OPENAI_RISK_ACKNOWLEDGED:-false}"
+      MLH_OPENAI_MODEL: "${MLH_OPENAI_MODEL:-}"
+      MLH_OPENAI_API_KEY_FILE: /run/secrets/openai_api_key
+      MLH_SUBDL_ENABLED: "${MLH_SUBDL_ENABLED:-false}"
+      MLH_SUBDL_RISK_ACKNOWLEDGED: "${MLH_SUBDL_RISK_ACKNOWLEDGED:-false}"
+      MLH_SUBDL_API_KEY_FILE: /run/secrets/subdl_api_key
+    secrets:
+      - openai_api_key
+      - subdl_api_key
+
+secrets:
+  openai_api_key:
+    file: ./deploy/secrets/openai_api_key
+  subdl_api_key:
+    file: ./deploy/secrets/subdl_api_key

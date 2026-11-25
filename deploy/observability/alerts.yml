@@ -1,0 +1,48 @@
+groups:
+  - name: movie-language-helper
+    rules:
+      - alert: MovieLanguageHelperBackendDown
+        expr: up{job="movie-language-helper-backend"} == 0
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: Movie Language Helper backend is unavailable
+
+      - alert: MovieLanguageHelperHighServerErrorRatio
+        expr: |
+          sum(rate(mlh_http_requests_total{status="5xx"}[10m]))
+          /
+          clamp_min(sum(rate(mlh_http_requests_total[10m])), 0.001)
+          > 0.05
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: More than 5% of requests are returning 5xx responses
+
+      - alert: MovieLanguageHelperAnalyzerFailures
+        expr: |
+          sum(increase(mlh_errors_total{code=~"analyzer_.*"}[15m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Repeated analyzer failures detected
+
+      - alert: MovieLanguageHelperProviderQuota
+        expr: |
+          increase(mlh_errors_total{code="provider_rate_limited"}[15m]) > 0
+        labels:
+          severity: warning
+        annotations:
+          summary: Subtitle provider has reported a rate or quota limit
+
+      - alert: MovieLanguageHelperResourcePressure
+        expr: |
+          sum(increase(mlh_errors_total{code=~"resource_limit_exceeded|provider_resource_limit"}[15m])) > 10
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: Repeated bounded-input rejections may indicate misuse

@@ -1,0 +1,67 @@
+name: movie-language-helper
+
+services:
+  backend:
+    build:
+      context: ./backend
+    restart: unless-stopped
+    init: true
+    read_only: true
+    tmpfs:
+      - /tmp:size=16m,mode=1777
+    expose:
+      - "8000"
+    environment:
+      MLH_DEPLOYMENT_PROFILE: private
+      MLH_PRIVATE_ACCESS_TOKEN_FILE: /run/secrets/private_access_token
+      MLH_CORS_ORIGINS: '["${MLH_PUBLIC_ORIGIN:?set MLH_PUBLIC_ORIGIN}"]'
+      MLH_TRUSTED_HOSTS: '["${MLH_PUBLIC_HOST:?set MLH_PUBLIC_HOST}","backend"]'
+    secrets:
+      - private_access_token
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://127.0.0.1:8000/health/ready', timeout=2)"]
+      interval: 30s
+      timeout: 3s
+      retries: 3
+      start_period: 10s
+
+  web:
+    build:
+      context: ./frontend
+    restart: unless-stopped
+    init: true
+    depends_on:
+      backend:
+        condition: service_healthy
+    environment:
+      MLH_SITE_ADDRESS: "${MLH_SITE_ADDRESS:-https://localhost}"
+      MLH_BASIC_AUTH_USERNAME: "${MLH_BASIC_AUTH_USERNAME:-movie-helper}"
+    secrets:
+      - private_access_token
+      - web_basic_auth_hash
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
+    security_opt:
+      - no-new-privileges:true
+    cap_drop:
+      - ALL
+    cap_add:
+      - NET_BIND_SERVICE
+
+secrets:
+  private_access_token:
+    file: ./deploy/secrets/private_access_token
+  web_basic_auth_hash:
+    file: ./deploy/secrets/web_basic_auth_hash
+
+volumes:
+  caddy_data:
+  caddy_config:
