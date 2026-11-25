@@ -89,4 +89,4 @@ Configuration is environment-based (`MLH_*`, see `.env.example`). Providers stay
 
 ## License
 
-[TODO: choose a license]
+MIT, see [LICENSE](LICENSE).
